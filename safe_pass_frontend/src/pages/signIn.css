@@ -45,6 +45,7 @@
   padding: 15px;
   border-radius: 5px;
   margin-top: 5px;
+  margin-bottom: 15px;
 }
 
 .tracker-box div {
@@ -61,4 +62,18 @@
 
 .list-icon.green {
   color: #0f0;
+}
+
+.alert {
+  display: flex;
+  align-items: center; /* Vertically center items */
+}
+
+.icon-column {
+  margin-right: 10px;
+  margin-bottom: 10px; /* Adjust the spacing between the icon and text */
+}
+
+.text-column {
+  flex-grow: 1; /* Allow the text to take up the remaining space in the row */
 }

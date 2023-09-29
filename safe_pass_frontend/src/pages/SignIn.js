@@ -9,6 +9,10 @@ import { basic_eye } from "react-icons-kit/linea/basic_eye";
 import { basic_eye_closed } from "react-icons-kit/linea/basic_eye_closed";
 import { arrows_exclamation } from "react-icons-kit/linea/arrows_exclamation";
 import { arrows_circle_check } from "react-icons-kit/linea/arrows_circle_check";
+import { warning } from "react-icons-kit/icomoon/warning";
+import Alert from "@mui/material/Alert";
+import Stack from "@mui/material/Stack";
+import ReCAPTCHA from "react-google-recaptcha";
 
 import Header from "../component/Header";
 import Footer from "../component/Footer";
@@ -27,13 +31,14 @@ const SignIn = ({ history }) => {
   };
 
   const { email, password } = values;
-
+  const [showAlert, setShowAlert] = useState(false); // State for showing the alert
   // Validation states
   const [lowerValidated, setLowerValidated] = useState(false);
   const [upperValidated, setUpperValidated] = useState(false);
   const [numberValidated, setNumberValidated] = useState(false);
   const [specialValidated, setSpecialValidated] = useState(false);
   const [lengthValidated, setLengthValidated] = useState(false);
+  const [isCaptchaCompleted, setIsCaptchaCompleted] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -58,6 +63,12 @@ const SignIn = ({ history }) => {
     setLengthValidated(length.test(value));
   };
 
+  //handle Catptcha
+  function onChange(value) {
+    setIsCaptchaCompleted(true);
+    console.log("Captcha value:", value);
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -81,7 +92,15 @@ const SignIn = ({ history }) => {
         }
       }
     } catch (err) {
-      toast.error(err.response.data.error);
+      if (err.response.status === 429) {
+        setShowAlert(true);
+        // Automatically hide the alert after 1 miniute
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 60000); // 1 miniute (1 seconds* 60)
+      } else {
+        toast.error(err.response.data.error);
+      }
     }
   };
 
@@ -89,11 +108,28 @@ const SignIn = ({ history }) => {
     <div>
       <Header />
       <div className="container custom_className">
-        <Card style={{ margin: 250, width: "600px" }}>
-          <h2 className="signup_title text-center" style={{ marginTop: 20 }}>
+        <Card
+          style={{
+            marginLeft: 310,
+            marginTop: 100,
+            marginBottom: 110,
+            width: "600px",
+          }}
+        >
+          <h2 className="signup_title text-center" style={{ marginTop: 40 }}>
             {t("SIGN_IN")}
           </h2>
-          <form className="col-sm-6 offset-3 pt-5 signup_form">
+          <form className="col-sm-7 offset-3 pt-3  signup_form">
+            {showAlert && (
+              <div className="alert alert-warning" role="alert">
+                <div className="icon-column">
+                  <Icon icon={warning} />
+                </div>
+                <div className="text-column">
+                  This is a warning — Too many invalid logins, try again later!
+                </div>
+              </div>
+            )}
             <div className="form-outline mb-4">
               <label>Enter Email</label>
               <input
@@ -104,9 +140,9 @@ const SignIn = ({ history }) => {
                 name="email"
                 value={email}
                 placeholder={t("EMAIL")}
+                style={{ borderColor: "lightBlue" }}
               />
             </div>
-
             <div className="form-outline mb-4">
               <label>Enter Password</label>
               <input
@@ -117,6 +153,7 @@ const SignIn = ({ history }) => {
                 name="password"
                 value={password}
                 placeholder={t("PASSWORD")}
+                style={{ borderColor: "lightBlue" }}
               />
               <i
                 className={`fas ${visible ? "fa-eye" : "fa-eye-slash"}`}
@@ -155,10 +192,16 @@ const SignIn = ({ history }) => {
                 />
               </main>
             )}
+            <ReCAPTCHA
+              sitekey="6LcJcDAkAAAAANw8Ze9Rgq3SCKZO_E3RWLixDUjH"
+              onChange={onChange}
+            />
+            ,
             <button
               onClick={handleSubmit}
               type="submit"
               className="btn btn-primary btn-block mb-4 mt-4"
+              disabled={!isCaptchaCompleted}
             >
               {t("LOGIN")}
             </button>
