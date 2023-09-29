@@ -9,6 +9,7 @@ const cookieParser = require("cookie-parser");
 app.use(cookieParser());
 const errorHandler = require("./middleware/error");
 const multer = require("multer");
+
 //route paths
 const wildlifeObservationRoutes = require("./routes/wildlifeObservationRoute");
 const bannerRoutes = require("./routes/banner");
