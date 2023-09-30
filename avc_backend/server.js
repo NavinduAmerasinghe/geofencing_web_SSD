@@ -1,3 +1,6 @@
+const https = require("https");
+const path = require("path");
+const fs = require("fs");
 const express = require("express");
 const app = express();
 require("dotenv").config();
@@ -9,6 +12,18 @@ const cookieParser = require("cookie-parser");
 app.use(cookieParser());
 const errorHandler = require("./middleware/error");
 const multer = require("multer");
+
+const sslServer = https.createServer(
+  {
+    // key: fs.readFileSync(path.join(__dirname, "cert", "key.pem")),
+    // cert: fs.readFileSync(path.join(__dirname, "cert", "cert.pem")),
+    key: fs.readFileSync(
+      path.join(__dirname, "certificate_generation", "MyServer.pfx")
+    ),
+    // passphrase: "123123",
+  },
+  app
+);
 
 //route paths
 const wildlifeObservationRoutes = require("./routes/wildlifeObservationRoute");
@@ -33,21 +48,6 @@ app.use(
 app.use(cors());
 app.use(express.json());
 
-// Multer storage configuration
-// const Storage = multer.diskStorage({
-//   destination: "uploads",
-//   filename: (req, file, cb) => {
-//     cb(null, file.originalname);
-//   },
-// });
-// const storage = multer.memoryStorage();
-// const upload = multer({ storage }).single("image");
-// const upload = multer({
-//   storage: Storage,
-// }).single("testImage");
-
-// app.use(express.urlencoded());
-
 app.get("/get", (req, res) => {
   res.send("Safe Pass");
 });
@@ -66,8 +66,8 @@ app.use("/api/yolo", animalRoutes);
 //Error Middleware
 app.use(errorHandler);
 
-const port = process.env.PORT || 8000;
+//const PORT = process.env.PORT || 3443;
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+sslServer.listen(3443, () => {
+  console.log(`Server is running on port 3443`);
 });
