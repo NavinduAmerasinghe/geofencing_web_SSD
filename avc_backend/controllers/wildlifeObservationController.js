@@ -159,14 +159,36 @@ exports.getObservations = async (req, res, next) => {
   }
 };
 
+// exports.getObservation = async (req, res, next) => {
+//   try {
+//     const observation = await WildlifeObservation.findById(req.params.id);
+//     if (!observation) {
+//       return res.status(404).send();
+//     }
+//     res.send(observation);
+//   } catch (error) {
+//     console.log(error);
+//     next(error);
+//   }
+// };
+
 //Retrive a single observation by ID
+const DOMPurify = require("dompurify");
+
 exports.getObservation = async (req, res, next) => {
   try {
     const observation = await WildlifeObservation.findById(req.params.id);
     if (!observation) {
       return res.status(404).send();
     }
-    res.send(observation);
+
+    // Sanitize the observation data before sending it to the client
+    const sanitizedObservation = {
+      // Sanitize  properties that contain user-generated content
+      description: DOMPurify.sanitize(observation.description),
+    };
+
+    res.send(sanitizedObservation);
   } catch (error) {
     console.log(error);
     next(error);
@@ -232,6 +254,23 @@ exports.updateObservation = async (req, res, next) => {
   }
 };
 
+// exports.deleteObservation = async (req, res) => {
+//   try {
+//     const observation = await WildlifeObservation.findByIdAndDelete(
+//       req.params.id
+//     );
+//     if (!observation) {
+//       return res.status(404).send();
+//     }
+//     res.send(observation);
+//   } catch (error) {
+//     console.log(error);
+//     next(error);
+//   }
+// };
+
+const escapeHtml = require("escape-html");
+
 exports.deleteObservation = async (req, res) => {
   try {
     const observation = await WildlifeObservation.findByIdAndDelete(
@@ -240,7 +279,11 @@ exports.deleteObservation = async (req, res) => {
     if (!observation) {
       return res.status(404).send();
     }
-    res.send(observation);
+
+    // Escape user-generated content before rendering it in the HTML response
+    const escapedObservation = escapeHtml(observation);
+
+    res.send(escapedObservation);
   } catch (error) {
     console.log(error);
     next(error);

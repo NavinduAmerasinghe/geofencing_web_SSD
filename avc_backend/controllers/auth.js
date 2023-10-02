@@ -84,6 +84,42 @@ exports.logout = (req, res, next) => {
     success: true,
     message: "Logged out",
   });
+  // req.logout();
+  // res.redirect(process.env.CLIENT_URL);
+};
+
+//login success
+exports.loginsuccess = (req, res, next) => {
+  if (req.user) {
+    res.status(200).json({
+      error: false,
+      message: "Successfully Loged In",
+      user: req.user,
+    });
+  } else {
+    res.status(403).json({ error: true, message: "Not Authorized" });
+  }
+};
+
+//login failed
+exports.loginfailed = (req, res, next) => {
+  res.status(401).json({
+    error: true,
+    message: "Log in failure",
+  });
+};
+
+//googleprofileinfo
+exports.googleprofileinfo = (req, res, next) => {
+  passport.authenticate("google", ["profile", "email"]);
+};
+
+//google callback
+exports.callback = (req, res, next) => {
+  passport.authenticate("google", {
+    successRedirect: process.env.CLIENT_URL,
+    failureRedirect: "/login/failed",
+  });
 };
 
 // USESR PROFILE

@@ -7,6 +7,10 @@ const {
   singleUser,
   userProfile,
   allUsers,
+  loginsuccess,
+  loginfailed,
+  googleprofileinfo,
+  callback,
 } = require("../controllers/auth");
 const { isAuthenticated } = require("../middleware/auth");
 const rateLimit = require("express-rate-limit");
@@ -24,5 +28,9 @@ router.get("/logout", logout);
 router.get("/getme", isAuthenticated, userProfile);
 router.get("/user/:id", singleUser);
 router.get("/users", allUsers);
+router.get("/login/success", loginsuccess);
+router.get("/login/failed", loginfailed);
+router.get("/google", googleprofileinfo);
+router.get("/google/callback", callback);
 
 module.exports = router;
