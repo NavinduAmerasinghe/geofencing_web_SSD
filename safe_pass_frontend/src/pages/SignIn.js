@@ -20,8 +20,8 @@ import Footer from "../component/Footer";
 const SignIn = ({ history }) => {
   const { t } = useTranslation();
   const [values, setValues] = useState({
-    email: "",
-    password: "",
+    email: "dulnathamerasinghe@gmail.com",
+    password: "Dulnath@123",
   });
   const [visible, setVisible] = useState(false);
   const [passwordStartedTyping, setPasswordStartedTyping] = useState(false); // Track password input
