@@ -29,7 +29,12 @@ const userSchema = new mongoose.Schema(
       required: [true, "Please add a Password"],
       minlength: [6, "password must have at least six(6) characters"],
       match: [
-        /^(?=.*\d)(?=.*[@#\-_$%^&+=§!\?])(?=.*[a-z])(?=.*[A-Z])[0-9A-Za-z@#\-_$%^&+=§!\?]+$/,
+        /^(?=.*\d)(?=.*[@#\-_$%^&+=§!\?])(?=.*[a-z])(?=.*[A-Z])[0-9A-Za-z@#\-_$%^&+=§!\?]+$/.test(
+          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+          "aaaaaaaaaaaaaaa!"
+        ),
         "Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number and a special characters",
       ],
     },
