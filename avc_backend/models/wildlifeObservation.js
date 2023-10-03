@@ -79,7 +79,7 @@ const WildlifeObservationSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: disabled }
 );
 WildlifeObservationSchema.index({ location: "2dsphere" });
 
