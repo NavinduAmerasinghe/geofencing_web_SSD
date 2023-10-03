@@ -66,6 +66,24 @@ app.use(
 app.use(cors());
 app.use(express.json());
 
+// fixed ssrf vulnerability issue
+function isURLValid(url) {
+  const allowedPrefix = "https://localhost:3000/";
+
+  return url.startsWith(allowedPrefix);
+}
+
+app.use((req, res, next) => {
+  const url = req.query.url;
+  if (url && url.trim() !== "") {
+    if (!isURLValid(url)) {
+      res.status(400).send("Invalid URL.");
+      return;
+    }
+  }
+  next();
+});
+
 app.get("/get", (req, res) => {
   res.send("Safe Pass");
 });
