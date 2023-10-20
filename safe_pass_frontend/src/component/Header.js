@@ -10,10 +10,26 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 const shapeStyles = { bgcolor: "#001eb9", width: 40, height: 40 };
 const shapeCircleStyles = { borderRadius: "50%" };
 const rectangle = <Box component="span" sx={shapeStyles} />;
-const circle = (
-  <Box component="span" sx={{ ...shapeStyles, ...shapeCircleStyles }} />
-);
+// const circle = (
+//   <Box component="span" sx={{ ...shapeStyles, ...shapeCircleStyles }} />
+// );
+const retrievedImageUrl = localStorage.getItem("image");
 
+const circle = (
+  <img
+    src={
+      retrievedImageUrl
+        ? retrievedImageUrl
+        : "https://firebasestorage.googleapis.com/v0/b/portfolioimages-4a133.appspot.com/o/profileImage.png?alt=media&token=c11e80f3-70f9-4da1-8830-e8320e92db7e&_gl=1*1xm9jlx*_ga*NjExMjk3ODQ5LjE2OTcxOTg5ODA.*_ga_CW55HF8NVT*MTY5NzYxMjM3MC44LjEuMTY5NzYxMjM4Ni40NC4wLjA."
+    }
+    alt="Circle Image"
+    style={{
+      width: "50px",
+      height: "50px",
+      borderRadius: "50%",
+    }}
+  />
+);
 const theme = createTheme({
   palette: {
     primary: {
@@ -34,6 +50,7 @@ const Header = ({ history }) => {
 
   const handleLogout = () => {
     logOut(history);
+    localStorage.clear();
   };
 
   return (
@@ -176,6 +193,26 @@ const Header = ({ history }) => {
           >
             English
           </button>
+          {/* <ThemeProvider theme={theme}>
+            <div style={{ marginLeft: "100px" }}>
+              <Link to="/user/dashboard">
+                <Badge
+                  color="primary"
+                  overlap="circular"
+                  badgeContent=" "
+                  variant="dot"
+                  sx={{
+                    "& .MuiBadge-badge": {
+                      top: "calc(68% + 6px)", // Adjust the value as per your preference
+                    },
+                  }}
+                >
+                  
+                  {circle}
+                </Badge>
+              </Link>
+            </div>
+          </ThemeProvider> */}
           <ThemeProvider theme={theme}>
             <div style={{ marginLeft: "100px" }}>
               <Link to="/user/dashboard">

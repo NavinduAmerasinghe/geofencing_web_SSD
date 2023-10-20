@@ -26,6 +26,7 @@ const Home = () => {
         console.log(err);
         toast.error(err.mesage);
       });
+    //window.location.reload();
   }, []);
 
   console.log(responseCount);

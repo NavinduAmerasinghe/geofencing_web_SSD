@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import api from "../api/api";
 import { toast } from "react-toastify";
 import { Card } from "@material-ui/core";
@@ -13,6 +13,9 @@ import { warning } from "react-icons-kit/icomoon/warning";
 import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
 import ReCAPTCHA from "react-google-recaptcha";
+import { auth, provider } from "./config";
+import { signInWithPopup } from "firebase/auth";
+import SignUp from "./SignUp";
 
 import Header from "../component/Header";
 import Footer from "../component/Footer";
@@ -39,6 +42,7 @@ const SignIn = ({ history }) => {
   const [specialValidated, setSpecialValidated] = useState(false);
   const [lengthValidated, setLengthValidated] = useState(false);
   const [isCaptchaCompleted, setIsCaptchaCompleted] = useState(false);
+  const [googleValue, setGoogleValue] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -103,6 +107,28 @@ const SignIn = ({ history }) => {
       }
     }
   };
+  const googleAuth = () => {
+    // try {
+    //   await api.get("/auth/google");
+    //   // Handle any success logic here
+    //   console.log("Successfully logged in with Google.");
+    // } catch (error) {
+    //   // Handle errors here
+    //   console.error("Error logging in with Google:", error);
+    // }
+
+    signInWithPopup(auth, provider).then((data) => {
+      setGoogleValue(data.user.email);
+      console.log(data);
+      localStorage.setItem("email", data.user.email);
+      localStorage.setItem("image", data.user.photoURL);
+      localStorage.setItem("name", data.user.displayName);
+    });
+  };
+
+  useEffect(() => {
+    setGoogleValue(localStorage.getItem("email"));
+  });
 
   return (
     <div>
@@ -196,7 +222,7 @@ const SignIn = ({ history }) => {
               sitekey="6LcJcDAkAAAAANw8Ze9Rgq3SCKZO_E3RWLixDUjH"
               onChange={onChange}
             />
-            ,
+
             <button
               onClick={handleSubmit}
               type="submit"
@@ -206,6 +232,17 @@ const SignIn = ({ history }) => {
               {t("LOGIN")}
             </button>
           </form>
+          <div style={{ marginLeft: 160 }}>
+            <p className="text">or</p>
+            {googleValue ? (
+              history.push("/")
+            ) : (
+              <button className="google_btn" onClick={googleAuth}>
+                <img src="../../images/google.png" alt="google icon" />
+                <span>SignIn with Google</span>
+              </button>
+            )}
+          </div>
         </Card>
       </div>
       <Footer />

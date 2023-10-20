@@ -64,6 +64,9 @@ import { Button } from "@mui/material";
 
 const UserDashboard = () => {
   const [profile, setProfile] = useState("");
+
+  const retrievedEmail = localStorage.getItem("email");
+  const retrievedName = localStorage.getItem("name");
   const { name, email, role, createdAt } = profile;
   const userRole = localStorage.getItem("userRole");
 
@@ -92,11 +95,11 @@ const UserDashboard = () => {
                 <b>User Dashboard</b>
               </div>
               <ul className="list-group list-group-flush">
-                <li className="list-group-item">Name: {name}</li>
-                <li className="list-group-item">E-mail: {email}</li>
-                <li className="list-group-item">
+                <li className="list-group-item">Name: {retrievedName}</li>
+                <li className="list-group-item">E-mail: {retrievedEmail}</li>
+                {/* <li className="list-group-item">
                   Joined at: {new Date(createdAt).toLocaleDateString()}
-                </li>
+                </li> */}
                 <li className="list-group-item">
                   {role === 1 ? "Admin" : "Registered User"}
                 </li>
