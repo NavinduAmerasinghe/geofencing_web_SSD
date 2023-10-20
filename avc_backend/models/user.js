@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema(
       default: 0,
     },
   },
-  { timestamps: true }
+  { timestamps: disable }
 );
 
 // userSchema.pre("save", async function (next) {
