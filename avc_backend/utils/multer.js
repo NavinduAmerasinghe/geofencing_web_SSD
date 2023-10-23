@@ -6,6 +6,9 @@ const upload = multer({
       cb(null, "/images");
     },
   }),
+  limits: {
+    fileSize: 8000000 // 8MB
+  }
 });
 
 module.exports = upload;
